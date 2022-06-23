@@ -1,5 +1,6 @@
 import httpClient, { ResponseData } from '@/http/http'
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace TodoDataDto {
   interface CreateTodoDto {
     name: string
@@ -13,7 +14,7 @@ export declare namespace TodoDataDto {
 }
 
 class TodoService {
-  async update<T>(id: number, data: TodoDataDto.UpdateTodoDto) {
+  async update(id: number, data: TodoDataDto.UpdateTodoDto) {
     return httpClient.put(`/todo/${id}`, data)
   }
 
