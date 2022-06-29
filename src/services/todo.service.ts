@@ -28,7 +28,7 @@ class TodoService {
         console.error('')
         // return res.data.data
       }
-      return res?.data?.data || []
+      return res.data.data || []
     })
   }
 
