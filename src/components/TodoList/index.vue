@@ -27,36 +27,81 @@
           v-model="todo.name"
           @change="handleUpdateTodo(todo)"
         />
-        <span class="done" @click="handleUpdateDoneTodo(todo.id, true)"
-          >✔️</span
-        >
+        <span class="done" @click="handleUpdateDoneTodo(todo)">✔️</span>
         <span class="close" @click="handleDeleteTodo(todo)">❌</span>
       </li>
     </ul>
     <div v-else style="margin-top: 30px">添加一个TODO吧</div>
+
+    <button class="button" @click="handleVisibleDone">
+      {{ isVisibleDone ? '隐藏' : '显示' }} 已完成
+    </button>
   </div>
 </template>
 
 <script lang="ts" setup name="TodoList">
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 
-import { todoService } from '@/services/todo.service'
-
-interface Todo {
-  id: number
-  name: string
-  done: boolean // 是否完成
-  create_time: number // 创建时间戳
-  update_time?: number // 更新时间戳
-}
+import { Todo, todoService } from '@/services/todo.service'
 
 const todoList = ref<Todo[]>([])
+const originTodoList = ref<Todo[]>([])
 const formData = reactive({ name: '' })
+const isVisibleDone = ref(true)
+
+onMounted(() => {
+  todoService.getTodoList().then((list) => {
+    originTodoList.value = [...list]
+  })
+})
+
+// 完成的todo自动移入到最后
+watch(
+  () => originTodoList.value,
+  (newOriginTodoList: Todo[]) => {
+    // TODO 自定义排序规则
+    let tempArr: Todo[] = []
+    let ids = newOriginTodoList
+      .map((item, index) => {
+        if (item.done) {
+          return item.id
+        }
+        return null
+      })
+      .filter((v) => v)
+
+    ids.forEach((id) => {
+      let index = newOriginTodoList.findIndex(
+        (item) => item.id && item.id === id
+      )
+      let item = newOriginTodoList.splice(index, 1)
+      tempArr.push(...item)
+    })
+    tempArr.forEach((item) => {
+      newOriginTodoList.push(item)
+    })
+    todoList.value = newOriginTodoList
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+)
+
+watch(isVisibleDone, (value) => {
+  todoList.value = originTodoList.value.filter((item) => {
+    return value ? item.id : !item.done
+  })
+})
 
 const handleAddTodo = () => {
   let name = formData.name
   todoService.createTodo({ name }).then((res) => {
-    console.log(res)
+    if (res.id) {
+      formData.name = ''
+      alert('新增成功')
+      todoService.getTodoList().then((list) => (originTodoList.value = list))
+    }
   })
 }
 
@@ -66,14 +111,27 @@ const handleUpdateTodo = (todo: Todo) => {
   })
 }
 
-const handleUpdateDoneTodo = (id: number, done: boolean) => {
-  todoService.update(id, {
-    done: done,
-  })
+const handleUpdateDoneTodo = (todo: Todo) => {
+  todoService
+    .update(todo.id, {
+      done: !todo.done,
+    })
+    .then((res) => {
+      todo.done = Boolean(res.done)
+    })
 }
 
 const handleDeleteTodo = (todo: Todo) => {
-  todoService.delete(todo.id)
+  todoService.delete(todo.id).then((res) => {
+    alert('删除成功')
+    todoService.getTodoList().then((list) => {
+      originTodoList.value = list
+    })
+  })
+}
+
+const handleVisibleDone = () => {
+  isVisibleDone.value = !isVisibleDone.value
 }
 </script>
 

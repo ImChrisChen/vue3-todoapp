@@ -3,10 +3,9 @@ import axios from 'axios'
 const httpClient = axios
 
 export interface ResponseData<T> {
-  result: 'ok' | 'error'
+  errcode: number
   data: T
   msg: string
-  errcode: number
 }
 
 httpClient.interceptors.request.use((req) => {
@@ -23,7 +22,6 @@ httpClient.interceptors.response.use((res) => {
 export class HttpExpect {
   success<T>(data: T): ResponseData<T> {
     return {
-      result: 'ok',
       data,
       msg: '请求成功',
       errcode: 0,
@@ -34,8 +32,7 @@ export class HttpExpect {
     return {
       data,
       msg: '请求失败',
-      result: 'error',
-      errcode,
+      errcode: 1,
     }
   }
 }
