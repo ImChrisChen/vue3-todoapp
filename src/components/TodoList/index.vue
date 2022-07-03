@@ -55,12 +55,8 @@ const formData = reactive({ name: '' })
 
 const handleAddTodo = () => {
   let name = formData.name
-  // eslint-disable-next-line no-debugger
-  debugger
   todoService.createTodo({ name }).then((res) => {
     console.log(res)
-    // eslint-disable-next-line no-debugger
-    debugger
   })
 }
 
