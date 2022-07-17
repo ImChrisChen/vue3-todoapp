@@ -18,7 +18,7 @@
     <ul v-if="todoList.length > 0">
       <li
         v-for="(todo, i) in todoList"
-        :class="{ 'todo-done': todo.done }"
+        :class="{ 'todo-done': todo.done, todo: true }"
         :key="i"
       >
         <input
@@ -51,6 +51,8 @@ const isVisibleDone = ref(true)
 
 onMounted(() => {
   todoService.getTodoList().then((list) => {
+    // eslint-disable-next-line no-debugger
+    debugger
     originTodoList.value = [...list]
   })
 })
