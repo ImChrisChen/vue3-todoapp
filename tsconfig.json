@@ -3,7 +3,9 @@
     "target": "esnext",
     "module": "esnext",
     "strict": true,
-    "jsx": "preserve",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
     "importHelpers": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
@@ -24,7 +26,8 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx",
-    "__tests__/**/*.spec.ts"
+    "__tests__/**/*.spec.ts",
+    "__tests__/**/*.spec.tsx"
   ],
   "exclude": ["node_modules"]
 }

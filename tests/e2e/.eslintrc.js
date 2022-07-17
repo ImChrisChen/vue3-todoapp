@@ -6,6 +6,9 @@ module.exports = {
   },
   rules: {
     strict: 'off',
-    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-var-requires': 0,
+  },
+  parserOptions: {
+    ecmaVersion: 6,
   },
 }
