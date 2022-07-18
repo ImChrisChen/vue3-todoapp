@@ -3,44 +3,27 @@
     <input
       class="input"
       placeholder="请输入要完成的事项"
-      style="
-        background: seashell;
-        color: #2c3e50;
-        display: inline-block;
-        border-radius: 4px;
-        padding: 10px;
-      "
+      style="background: seashell; color: #2c3e50; display: inline-block; border-radius: 4px; padding: 10px"
       v-model="formData.name"
       type="text"
     />
     <button class="button" @click="handleAddTodo">添加</button>
 
     <ul v-if="todoList.length > 0">
-      <li
-        v-for="(todo, i) in todoList"
-        :class="{ 'todo-done': todo.done, todo: true }"
-        :key="i"
-      >
-        <input
-          class="input"
-          type="text"
-          v-model="todo.name"
-          @change="handleUpdateTodo(todo)"
-        />
+      <li v-for="(todo, i) in todoList" :class="{ 'todo-done': todo.done, todo: true }" :key="i">
+        <input class="input" type="text" v-model="todo.name" @change="handleUpdateTodo(todo)" />
         <span class="done" @click="handleUpdateDoneTodo(todo)">✔️</span>
         <span class="close" @click="handleDeleteTodo(todo)">❌</span>
       </li>
     </ul>
     <div v-else style="margin-top: 30px">添加一个TODO吧</div>
 
-    <button class="button" @click="handleVisibleDone">
-      {{ isVisibleDone ? '隐藏' : '显示' }} 已完成
-    </button>
+    <button class="button" @click="handleVisibleDone">{{ isVisibleDone ? '隐藏' : '显示' }} 已完成</button>
   </div>
 </template>
 
 <script lang="ts" setup name="TodoList">
-import { onMounted, reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch, watchEffect } from 'vue'
 
 import { Todo, todoService } from '@/services/todo.service'
 
@@ -58,37 +41,28 @@ onMounted(() => {
 })
 
 // 完成的todo自动移入到最后
-watch(
-  () => originTodoList.value,
-  (newOriginTodoList: Todo[]) => {
-    // TODO 自定义排序规则
-    let tempArr: Todo[] = []
-    let ids = newOriginTodoList
-      .map((item, index) => {
-        if (item.done) {
-          return item.id
-        }
-        return null
-      })
-      .filter((v) => v)
+watchEffect(() => {
+  // TODO 自定义排序规则
+  let tempArr: Todo[] = []
+  let ids = originTodoList.value
+    .map((item) => {
+      if (item.done) {
+        return item.id
+      }
+      return null
+    })
+    .filter((v) => v)
 
-    ids.forEach((id) => {
-      let index = newOriginTodoList.findIndex(
-        (item) => item.id && item.id === id
-      )
-      let item = newOriginTodoList.splice(index, 1)
-      tempArr.push(...item)
-    })
-    tempArr.forEach((item) => {
-      newOriginTodoList.push(item)
-    })
-    todoList.value = newOriginTodoList
-  },
-  {
-    deep: true,
-    immediate: true,
-  }
-)
+  ids.forEach((id) => {
+    let index = originTodoList.value.findIndex((item) => item.id && item.id === id)
+    let item = originTodoList.value.splice(index, 1)
+    tempArr.push(...item)
+  })
+  tempArr.forEach((item) => {
+    originTodoList.value.push(item)
+  })
+  todoList.value = originTodoList.value
+})
 
 watch(isVisibleDone, (value) => {
   todoList.value = originTodoList.value.filter((item) => {
@@ -119,7 +93,7 @@ const handleUpdateDoneTodo = (todo: Todo) => {
       done: !todo.done,
     })
     .then((res) => {
-      todo.done = Boolean(res.done)
+      todo.done = res.done
     })
 }
 

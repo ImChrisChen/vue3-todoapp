@@ -3,11 +3,11 @@ import httpClient, { ResponseData } from '@/http/http'
 export interface Todo {
   id: number
   name: string
-  done: boolean // 是否完成
-  remark: string // 备注
-  deadline: string // 到期时间
-  created_time: number // 创建时间戳
-  updated_time?: number // 更新时间戳
+  done: 0 | 1 // 是否完成
+  remark: string | null // 备注
+  deadline: string | null // 到期时间
+  created_at: string // 创建时间戳
+  updated_at?: string // 更新时间戳
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -34,14 +34,12 @@ class TodoService {
   }
 
   async delete(id: number) {
-    return httpClient
-      .delete<ResponseData<any>>(`/api/todo/${id}`)
-      .then((res) => {
-        if (res.data.errcode !== 0) {
-          return {}
-        }
-        return res.data.data
-      })
+    return httpClient.delete<ResponseData<any>>(`/api/todo/${id}`).then((res) => {
+      if (res.data.errcode !== 0) {
+        return {}
+      }
+      return res.data.data
+    })
   }
 
   async getTodoList(): Promise<Todo[]> {

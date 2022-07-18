@@ -5,8 +5,8 @@ module.exports = {
     'cypress/globals': true,
   },
   rules: {
-    strict: 'off',
-    '@typescript-eslint/no-var-requires': 0,
+    '@typescript-eslint/no-var-requires': 'off',
+    'max-len': 120,
   },
   parserOptions: {
     ecmaVersion: 6,

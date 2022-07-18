@@ -1,12 +1,14 @@
 <template>
   <ul>
-    <li class="li" v-for="(item, i) in items" :key="i">{{ item.name }}</li>
+    <li :class="{ li: true }" v-for="(item, i) in items" :key="i">
+      {{ item.name }}
+    </li>
   </ul>
 </template>
 
 <script lang="ts" setup name="TestLists">
-import { onMounted, ref } from 'vue'
 import { Todo, todoService } from '@/services'
+import { onMounted, ref } from 'vue'
 
 const items = ref<Todo[]>([])
 
@@ -17,4 +19,8 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.done {
+  color: gray;
+}
+</style>

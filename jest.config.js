@@ -9,6 +9,8 @@ module.exports = {
     '**/*/__tests__/*.spec.(js|jsx|ts|tsx)',
   ],
 
+  // snapshotSerializers: ['<rootDir>/node_modules/jest-serializer-vue'],
+
   moduleFileExtensions: ['js', 'ts', 'tsx', 'json', 'vue'],
 
   // 设置别名

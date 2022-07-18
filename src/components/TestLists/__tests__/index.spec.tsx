@@ -12,5 +12,10 @@ describe('components/TestLists', function () {
   it('should render items', async () => {
     const len = testLists.findAll('.li')
     expect(len).toHaveLength(todolist.length)
+    expect(testLists).toMatchSnapshot() // 没有快照则会在当前目录生成一个快照(__snapshot__)
   })
+
+  // it('TestLists Snapshot Test', () => {
+  //   expect(testLists.element).toMatchSnapshot()
+  // })
 })

@@ -9,10 +9,7 @@ Array.prototype.deleteItem = function (i: number) {
   return this
 }
 
-Array.prototype.addItem = function <T>(
-  i: number,
-  ...items: Array<T>
-): Array<T> {
+Array.prototype.addItem = function <T>(i: number, ...items: Array<T>): Array<T> {
   const lastIndex = this.length - 1
   const tempArr: Array<T> = []
 
