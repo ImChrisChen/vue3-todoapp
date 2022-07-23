@@ -3,15 +3,15 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { Todo, todoService } from '@/services'
 
 describe('TodoList', () => {
-  it('jest.fn', () => {
-    const mockFn = jest.fn()
-    const result = mockFn(1, 2, 3)
-
-    expect(result).toBeUndefined()
-    expect(mockFn).toBeCalled()
-    expect(mockFn).toBeCalledTimes(1)
-    expect(mockFn).toHaveBeenCalledWith(1, 2, 3)
-  })
+  // it('jest.fn', () => {
+  //   const mockFn = jest.fn()
+  //   const result = mockFn(1, 2, 3)
+  //
+  //   expect(result).toBeUndefined()
+  //   expect(mockFn).toBeCalled()
+  //   expect(mockFn).toBeCalledTimes(1)
+  //   expect(mockFn).toHaveBeenCalledWith(1, 2, 3)
+  // })
 
   it('render todolist', async () => {
     const list: Array<Todo> = [
@@ -59,13 +59,11 @@ describe('TodoList', () => {
     await flushPromises()
 
     expect(todoList.exists()).toBe(true)
+
     const l = todoList.findAll('.todo')
     expect(l).toHaveLength(list.length)
     expect(todoList.findAll('.todo.todo-done')).toHaveLength(list.filter((item) => item.done).length)
 
-    // const values = todoList.findAll('.todo .input').map((item) => item.element['value'])
-    // expect(values).toEqual(list.map((item) => item.name))
-    // expect(values).toContainEqual(values)
-    expect(todoList).toMatchSnapshot()
+    expect(todoList.html()).toMatchSnapshot()
   })
 })

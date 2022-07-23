@@ -34,8 +34,6 @@ const isVisibleDone = ref(true)
 
 onMounted(() => {
   todoService.getTodoList().then((list) => {
-    // eslint-disable-next-line no-debugger
-    debugger
     originTodoList.value = [...list]
   })
 })
@@ -187,5 +185,6 @@ const handleVisibleDone = () => {
   font-weight: bold;
   font-size: 16px;
   margin-left: 20px;
+  opacity: 0.9;
 }
 </style>
