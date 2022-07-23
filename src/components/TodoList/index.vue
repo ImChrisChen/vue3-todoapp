@@ -2,18 +2,19 @@
   <div class="todo-list">
     <input
       class="input"
+      data-casemark="pre-add-input"
       placeholder="请输入要完成的事项"
       style="background: seashell; color: #2c3e50; display: inline-block; border-radius: 4px; padding: 10px"
       v-model="formData.name"
       type="text"
     />
-    <button class="button" @click="handleAddTodo">添加</button>
+    <button class="button" data-casemark="submit" @click="handleAddTodo">添加</button>
 
-    <ul v-if="todoList.length > 0">
+    <ul data-casemark="todolist" v-if="todoList.length > 0">
       <li v-for="(todo, i) in todoList" :class="{ 'todo-done': todo.done, todo: true }" :key="i">
         <input class="input" type="text" v-model="todo.name" @change="handleUpdateTodo(todo)" />
         <span class="done" @click="handleUpdateDoneTodo(todo)">✔️</span>
-        <span class="close" @click="handleDeleteTodo(todo)">❌</span>
+        <span class="delete" @click="handleDeleteTodo(todo)">❌</span>
       </li>
     </ul>
     <div v-else style="margin-top: 30px">添加一个TODO吧</div>
@@ -24,6 +25,7 @@
 
 <script lang="ts" setup name="TodoList">
 import { onMounted, reactive, ref, watch, watchEffect } from 'vue'
+import { ElMessage } from 'element-plus'
 
 import { Todo, todoService } from '@/services/todo.service'
 
@@ -73,16 +75,23 @@ const handleAddTodo = () => {
   todoService.createTodo({ name }).then((res) => {
     if (res.id) {
       formData.name = ''
-      alert('新增成功')
-      todoService.getTodoList().then((list) => (originTodoList.value = list))
+      todoService.getTodoList().then((list) => {
+        originTodoList.value = list
+        ElMessage.success('新增成功')
+      })
     }
   })
 }
 
 const handleUpdateTodo = (todo: Todo) => {
-  todoService.update(todo.id, todo).then((res) => {
-    console.log(res)
-  })
+  todoService
+    .update(todo.id, {
+      name: todo.name,
+      done: Boolean(todo.done),
+    })
+    .then((res) => {
+      console.log(res)
+    })
 }
 
 const handleUpdateDoneTodo = (todo: Todo) => {
@@ -97,7 +106,7 @@ const handleUpdateDoneTodo = (todo: Todo) => {
 
 const handleDeleteTodo = (todo: Todo) => {
   todoService.delete(todo.id).then((res) => {
-    alert('删除成功')
+    ElMessage.info('删除成功')
     todoService.getTodoList().then((list) => {
       originTodoList.value = list
     })
@@ -155,7 +164,7 @@ const handleVisibleDone = () => {
     text-align: center;
   }
 
-  .close {
+  .delete {
     border-radius: 50%;
     position: absolute;
     top: 50%;
