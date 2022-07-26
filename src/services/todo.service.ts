@@ -56,7 +56,6 @@ class TodoService {
       data.done = false
     }
     if (!data.name) {
-      // console.error('name不能为空', data)
       throw new Error(`name不能为空`)
     }
 

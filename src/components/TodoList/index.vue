@@ -11,7 +11,12 @@
     <button class="button" data-casemark="submit" @click="handleAddTodo">添加</button>
 
     <ul data-casemark="todolist" v-if="todoList.length > 0">
-      <li v-for="(todo, i) in todoList" :class="{ 'todo-done': todo.done, todo: true }" :key="i">
+      <li
+        v-for="(todo, i) in todoList"
+        :class="{ 'todo-done': todo.done, todo: true }"
+        :key="i"
+        :data-casemark-id="todo.id"
+      >
         <input class="input" type="text" v-model="todo.name" @change="handleUpdateTodo(todo)" />
         <span class="done" @click="handleUpdateDoneTodo(todo)">✔️</span>
         <span class="delete" @click="handleDeleteTodo(todo)">❌</span>
