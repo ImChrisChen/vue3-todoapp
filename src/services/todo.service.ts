@@ -1,4 +1,5 @@
 import httpClient, { ResponseData } from '@/http/http'
+import { cacheService } from '@/services/cache.service'
 
 export interface Todo {
   id: number
@@ -42,12 +43,26 @@ class TodoService {
     })
   }
 
+  // cached
+  // TODO 更新的时候缓存记得要失效
   async getTodoList(): Promise<Todo[]> {
+    const cache = cacheService.getItem('todolist')
+    // eslint-disable-next-line no-debugger
+    debugger
+    if (cache) {
+      return cache as Todo[]
+    }
+
     return httpClient.get<ResponseData<Todo[]>>(`/api/todo/`).then((res) => {
       if (res.data.errcode !== 0) {
         return []
       }
-      return res.data.data || []
+      const content = res.data.data || []
+
+      // 异步写入缓存
+      setTimeout(() => cacheService.setItem('todolist', content), 200)
+
+      return content
     })
   }
 
