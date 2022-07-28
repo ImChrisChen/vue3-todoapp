@@ -110,7 +110,7 @@ const handleUpdateDoneTodo = (todo: Todo) => {
 }
 
 const handleDeleteTodo = (todo: Todo) => {
-  todoService.delete(todo.id).then((res) => {
+  todoService.delete(todo.id).then(() => {
     ElMessage.info('删除成功')
     todoService.getTodoList().then((list) => {
       originTodoList.value = list

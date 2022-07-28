@@ -43,13 +43,13 @@ class TodoService {
     })
   }
 
-  // cached
-  // TODO 更新的时候缓存记得要失效
-  async getTodoList(): Promise<Todo[]> {
+  /**
+   * @description 获取todo列表数据
+   * @param applyCache {boolean} 是否应用缓存 默认: false
+   */
+  async getTodoList(applyCache = false): Promise<Todo[]> {
     const cache = cacheService.getItem('todolist')
-    // eslint-disable-next-line no-debugger
-    debugger
-    if (cache) {
+    if (applyCache && cache) {
       return cache as Todo[]
     }
 
