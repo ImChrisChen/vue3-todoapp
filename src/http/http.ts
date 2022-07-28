@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 const httpClient = axios
+const isDevelopment = process.env.NODE_ENV === 'development'
 
 export interface ResponseData<T> {
   errcode: number
@@ -8,7 +9,16 @@ export interface ResponseData<T> {
   msg: string
 }
 
+if (!isDevelopment) {
+  httpClient.defaults.baseURL = 'http://localhost:3000'
+}
+
 httpClient.interceptors.request.use((req) => {
+  if (!isDevelopment) {
+    if (req.url && req.url?.startsWith('/api/')) {
+      req.url = (req.url as string).replace('/api/', '/')
+    }
+  }
   return req
 })
 
