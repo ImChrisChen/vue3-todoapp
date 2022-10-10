@@ -6,6 +6,7 @@
       placeholder="请输入要完成的事项"
       style="background: seashell; color: #2c3e50; display: inline-block; border-radius: 4px; padding: 10px"
       v-model="formData.name"
+      @keydown.enter="handleAddTodo"
       type="text"
     />
     <button class="button" data-casemark="submit" @click="handleAddTodo">添加</button>
