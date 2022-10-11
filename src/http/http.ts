@@ -10,7 +10,7 @@ export interface ResponseData<T> {
 }
 
 if (!isDevelopment) {
-  httpClient.defaults.baseURL = 'http://localhost:3000'
+  httpClient.defaults.baseURL = 'http://chrisorz.tpddns.cn:3001'
 }
 
 httpClient.interceptors.request.use((req) => {
