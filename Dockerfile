@@ -18,5 +18,5 @@ COPY ./nginx.conf ./nginx.conf
 FROM nginx:latest as nginx
 COPY --from=nodejs /usr/app/dist /usr/share/nginx/html
 COPY --from=nodejs /usr/app/nginx.conf /etc/nginx/conf.d
-EXPOSE 8080
+EXPOSE 3000
 # CMD ['nginx', '-g', 'daemon off;']
